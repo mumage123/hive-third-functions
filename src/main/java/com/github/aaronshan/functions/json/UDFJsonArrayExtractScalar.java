@@ -4,6 +4,9 @@ import com.github.aaronshan.functions.utils.json.JsonExtract;
 import com.github.aaronshan.functions.utils.json.JsonPath;
 import com.github.aaronshan.functions.utils.json.JsonUtils;
 import java.util.ArrayList;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentException;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentLengthException;
@@ -24,6 +27,9 @@ import org.apache.hadoop.io.Text;
         , extended = "Example:\n"
         + "  > SELECT _FUNC_(json_array, json_path) FROM src LIMIT 1;")
 public class UDFJsonArrayExtractScalar extends GenericUDF {
+
+    // Log日志打印
+    static final Log LOG = LogFactory.getLog(UDFJsonArrayExtractScalar.class.getName());
     private ObjectInspectorConverters.Converter[] converters;
 
     public UDFJsonArrayExtractScalar() {
@@ -59,6 +65,9 @@ public class UDFJsonArrayExtractScalar extends GenericUDF {
             Text jsonText = (Text) converters[0].convert(arguments[0].get());
             Text pathText = (Text) converters[1].convert(arguments[1].get());
             String json = jsonText.toString();
+
+//            打印json
+            LOG.info("打印json"+json);
 
             Long length = JsonUtils.jsonArrayLength(json);
             if (length == null) {
